@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Role;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -73,5 +74,17 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * sendPasswordResetNotification
+     */
+    public function sendPasswordResetNotification($token)
+    {
+
+        //$url = 'http://localhost:8000/v1/admin/reset-password?token=' . $token;
+        $url = 'http://localhost:8080/auth/reset-password/' . $token;
+
+        $this->notify(new ResetPasswordNotification($url));
     }
 }

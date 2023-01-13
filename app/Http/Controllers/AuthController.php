@@ -8,6 +8,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\Controller\authorize;
+use Illuminate\Validation\Rules\Password as RulesPassword;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -18,8 +23,8 @@ class AuthController extends Controller
      */
     public function __construct()  
     {
-        $this->middleware(['auth:api'], ['except' => ['login']]);
-    }
+        //$this->middleware(['auth:api'], ['except' => ['login','store']]);
+    } 
 
     public function index() {
         $users = User::all();
@@ -45,18 +50,15 @@ class AuthController extends Controller
      * Register New User
      */
 
-    public function register(Request $request)
+    public function store(Request $request)
     {
-        $this->authorize("user.register");
+        //$this->authorize("user.register");
 
         $user = new User;
         $user->username = $request->username;
-        $user->firstname = $request->firstname;
-        $user->lastname = $request->lastname;
+        $user->nickname = $request->nickname;
         $user->phone = $request->phone;
-        $user->birthday = $request->birthday;
-        $user->role = $request->role;
-        $user->state = $request->state;
+        $user->cin = $request->cin;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
@@ -79,6 +81,61 @@ class AuthController extends Controller
         $user->save();
 
         return 'Updated';
+    }
+
+    // Forgot Password
+    public function forgotpassword(Request $request) {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+    
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+        return $status;
+    
+        if ($status == Password::RESET_LINK_SENT) {
+            return [
+                'status' => __($status)
+            ];
+        };
+    
+        throw ValidationException::withMessages([
+            'email' => [trans($status)]
+        ]);
+    }
+
+    // reset password
+    public function resetpassword(Request $request) {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => ['required', 'confirmed', RulesPassword::defaults()],
+        ]);
+    
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($request->password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+    
+                $user->tokens()->delete();
+    
+                event(new PasswordReset($user));
+            }
+        );
+    
+        if ($status == Password::PASSWORD_RESET) {
+            return response([
+                'message'=> 'Password reset successfully'
+            ]);
+        }
+    
+        return response([
+            'message'=> __($status)
+        ], 500);
     }
 
     // trashed

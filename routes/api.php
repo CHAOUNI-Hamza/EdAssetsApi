@@ -42,6 +42,8 @@ Route::group([
     Route::post('forced/{id}',[ AuthController::class, 'forced' ])->name('UserForced'); 
     Route::post('logout',[ AuthController::class, 'logout' ])->name('UserLogout'); 
     Route::post('refresh',[ AuthController::class, 'refresh' ])->name('UserRefresh'); 
-    Route::post('me', [ AuthController::class, 'me' ])->name('UserMe'); 
+    Route::post('me', [ AuthController::class, 'me' ])->name('UserMe');
+    Route::post('/forgot-password',[ AuthController::class, 'forgotpassword' ])->name('ForgotPassword'); 
+    Route::post('/reset-password',[ AuthController::class, 'resetpassword' ])->name('ResetPassword');  
 
 });
