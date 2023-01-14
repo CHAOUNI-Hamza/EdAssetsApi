@@ -14,7 +14,15 @@ class RoleFactory extends Factory
     public function definition()
     {
         return [
-            'role' => 'reader'
+            
+                'role' => '0' // Admin
+                /*'role' => '1', // Generale Manager 
+                'role' => '2', // Manager
+                'role' => '3', // Accountant
+                'role' => '4', // Auditor
+                'role' => '5', // Agent Inve
+                'role' => '6'*/  // Agent inventaire
+            
         ];
     }
 }

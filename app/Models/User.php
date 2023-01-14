@@ -19,10 +19,10 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Get the phone associated with the user.
      */
-    /*public function role()
+    public function roles()
     {
-        return $this->belongsTo(Role::class);
-    }*/
+        return $this->hasMany(Role::class);
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -30,9 +30,14 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'nickname',
+        'phone',
+        'cin',
+        'state',
+        'role'
     ];
 
     /**

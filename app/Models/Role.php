@@ -14,8 +14,17 @@ class Role extends Model
     /**
      * Get the user that owns the phone.
      */
-    /*public function user()
+    public function user()
     {
-        return $this->hasMany(User::class);
-    }*/
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'role',
+    ];
 }

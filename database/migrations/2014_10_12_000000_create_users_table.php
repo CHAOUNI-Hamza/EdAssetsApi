@@ -23,9 +23,8 @@ class CreateUsersTable extends Migration
             $table->string('phone', 50);
             $table->string('cin', 50);
             $table->boolean('state')->default(0);
-
-            /*$table->unsignedBigInteger('role_id');
-            $table->foreign('role_id')->references('id')->on('roles');*/
+            
+            
 
             $table->softDeletes();
             $table->rememberToken();

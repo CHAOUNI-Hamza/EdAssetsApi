@@ -16,7 +16,17 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        User::factory()->count(10)->create();
-        Role::factory()->count(4)->create();
+        //$users = User::factory()->count(10)->create();
+        $roles = Role::factory()->count(4)->create();
+        /*User::factory(70)->each(function($user) use ($roles) {
+            $user->role = $roles->random()->role;
+        } )->create();*/
+
+        User::factory(20)->create()
+            ->each(function($user) use ($roles) {
+            $user->role_id = $roles->random()->id;
+            $user->save(); 
+        });
+
     }
 }

@@ -5,14 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Post;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\Controller\authorize;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
+//use App\Http\Controllers\Controller\authorize;
 
 class AuthController extends Controller
 {
@@ -27,8 +33,18 @@ class AuthController extends Controller
     } 
 
     public function index() {
-        $users = User::all();
+        $users = User::with('roles')->paginate(70);
         return UserResource::collection($users);
+    }
+
+    /**
+     * Shiw One User
+     */
+
+    public function show(User $id) {
+        /*$user = DB::table('users')->find($id);
+        //return $user;*/
+        return new UserResource($id);
     }
 
     /**
