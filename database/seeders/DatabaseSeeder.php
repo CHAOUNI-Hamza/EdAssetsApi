@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+<<<<<<< Updated upstream
         //$users = User::factory()->count(10)->create();
         $roles = Role::factory()->count(4)->create();
         /*User::factory(70)->each(function($user) use ($roles) {
@@ -28,5 +29,9 @@ class DatabaseSeeder extends Seeder
             $user->save(); 
         });
 
+=======
+        User::factory()->count(10)->create();
+        // Role::factory()->count(4)->create();
+>>>>>>> Stashed changes
     }
 }
